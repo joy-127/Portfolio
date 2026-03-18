@@ -1,52 +1,124 @@
-import { Link } from "react-scroll"
-import { FaUser, FaCode, FaProjectDiagram, FaEnvelope } from "react-icons/fa"
+import { useState, useEffect } from "react"
+import { FaUser, FaCode, FaProjectDiagram, FaEnvelope, FaBars, FaTimes, FaBriefcase } from "react-icons/fa"
+import { motion } from "framer-motion"
 
+const navItems = [
+  { id: "about", label: "About", icon: <FaUser /> },
+  { id: "skills", label: "Skills", icon: <FaCode /> },
+  { id: "projects", label: "Projects", icon: <FaProjectDiagram /> },
+  { id: "experience", label: "Experience", icon: <FaBriefcase /> },
+  { id: "contact", label: "Contact", icon: <FaEnvelope /> }
+]
 
-const Navbar = () => {
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [active, setActive] = useState("about")
+  const [showNav, setShowNav] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY
+
+      // Scroll Spy
+      const sections = navItems.map(item => document.getElementById(item.id))
+      sections.forEach(section => {
+        if (section) {
+          const rect = section.getBoundingClientRect()
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActive(section.id)
+          }
+        }
+      })
+
+      // Hide/Show Navbar
+      if (currentY > lastScrollY && currentY > 100) {
+        setShowNav(false) // scrolling down
+      } else {
+        setShowNav(true) // scrolling up
+      }
+
+      setLastScrollY(currentY)
+    }
+
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [lastScrollY])
+
   return (
-    <nav className="w-full flex justify-between items-center p-6 fixed top-0 z-20 bg-black/30 backdrop-blur-lg">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-transform duration-500 ${showNav ? "translate-y-0" : "-translate-y-full"} bg-black/60 backdrop-blur-xl border-b border-white/10 shadow-[0_0_25px_rgba(168,85,247,0.4)]`}
+    >
+      <div className="flex justify-between items-center px-6 md:px-12 py-3">
 
- <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-pink-600 animate-gradient-x">
-  Portfolio
-</h1>
+        {/* Logo */}
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-pink-600"
+        >
+          Portfolio
+        </motion.h1>
 
+        {/* Desktop Menu */}
+        <ul className="hidden md:flex gap-8 items-center text-white">
+          {navItems.map(item => (
+            <li key={item.id} className="relative group" style={{ perspective: "800px" }}>
+              <motion.a
+                href={`#${item.id}`}
+                whileHover={{ rotateX: 10, rotateY: -10, scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 200 }}
+                className={`flex items-center gap-2 px-3 py-1 rounded-lg transition-all duration-300 hover:text-purple-400 hover:bg-white/5 ${active === item.id ? "text-purple-400 bg-white/10" : ""}`}
+              >
+                {item.icon}
+                {item.label}
+              </motion.a>
 
+              {/* Gradient underline */}
+              <span className={`absolute left-0 -bottom-1 h-[2px] bg-gradient-to-r from-purple-400 to-pink-500 transition-all duration-300 ${active === item.id ? "w-full" : "w-0 group-hover:w-full"}`}></span>
+            </li>
+          ))}
+        </ul>
 
-      <ul className="flex gap-8">
+        {/* Mobile Toggle */}
+        <div className="md:hidden text-white text-xl">
+          <button onClick={() => setIsOpen(!isOpen)} className="hover:text-purple-400 transition">
+            {isOpen ? <FaTimes /> : <FaBars />}
+          </button>
+        </div>
+      </div>
 
-<li>
-<a href="#about" className="flex items-center gap-2 hover:text-purple-400">
-<FaUser />
-About
-</a>
-</li>
-
-<li>
-<a href="#skills" className="flex items-center gap-2 hover:text-purple-400">
-<FaCode />
-Skills
-</a>
-</li>
-
-<li>
-<a href="#projects" className="flex items-center gap-2 hover:text-purple-400">
-<FaProjectDiagram />
-Projects
-</a>
-</li>
-
-<li>
-<a href="#contact" className="flex items-center gap-2 hover:text-purple-400">
-<FaEnvelope />
-Contact
-</a>
-</li>
-
-</ul>
-
-
+      {/* Mobile Menu */}
+      {isOpen && (
+        <motion.ul
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="md:hidden flex flex-col items-center gap-5 py-5 bg-black/90 backdrop-blur-lg text-white"
+        >
+          {navItems.map(item => (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                onClick={() => setIsOpen(false)}
+                className={`flex items-center gap-3 text-lg px-4 py-2 rounded-lg transition-all duration-300 hover:bg-white/10 ${active === item.id ? "text-purple-400 bg-white/10" : ""}`}
+              >
+                {item.icon}
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </motion.ul>
+      )}
     </nav>
   )
 }
 
-export default Navbar
+/* GLOBAL CSS IMPROVEMENTS */
+/* Smooth scroll */
+/* html { scroll-behavior: smooth; } */
+
+/* Reduce section spacing + fix navbar overlap */
+/* section {
+  padding: 80px 0;  // reduced spacing
+  scroll-margin-top: 80px; // prevents navbar overlap
+} */
