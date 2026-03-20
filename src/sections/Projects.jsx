@@ -9,28 +9,32 @@ const projects = [
     desc: "Modern developer portfolio built with React & Tailwind",
     github: "https://github.com/joy-127/portfolio-site",
     tech: ["React", "Tailwind", "Framer Motion"],
-    details: "A fully responsive, visually engaging developer portfolio designed with modern UI principles, incorporating smooth animations, interactive 3D effects, and dynamic components. Showcases my projects, technical skills, and professional experience in a polished and immersive way, highlighting creativity, attention to detail, and front-end development expertise."
+    details:
+      "A fully responsive, visually engaging developer portfolio designed with modern UI principles, incorporating smooth animations, interactive 3D effects, and dynamic components. Showcases my projects, technical skills, and professional experience in a polished and immersive way, highlighting creativity, attention to detail, and front-end development expertise."
   },
   {
     title: "Bookmark Storage",
     desc: "Users can save and manage bookmarked projects",
-    github: "#",
-    tech: ["React", "Node.js", "MongoDB"],
-    details:"A full-stack bookmark manager application that allows users to securely save, organize, and manage their favorite links. Features include user authentication, intuitive categorization, and a clean, responsive interface, providing a seamless and personalized experience for efficiently managing web resources."
+    github: "https://github.com/joy-127/Bookmark-storage.git",
+    tech: ["HTML", "Node.js", "FireBase"],
+    details:
+      "A full-stack bookmark manager application that allows users to securely save, organize, and manage their favorite links. Features include user authentication, intuitive categorization, and a clean, responsive interface, providing a seamless and personalized experience for efficiently managing web resources."
   },
   {
     title: "Doc-Genie",
     desc: "AI-powered document processing solution",
     github: "https://github.com/joy-127/Doc_Genie",
     tech: ["Python", "Flask", "AI"],
-    details: "An intelligent document processing system that leverages AI models to extract, analyze, and process text from various document formats. Features include automated data extraction, contextual understanding, and efficient information processing, enabling faster decision-making and streamlined workflows."
+    details:
+      "An intelligent document processing system that leverages AI models to extract, analyze, and process text from various document formats. Features include automated data extraction, contextual understanding, and efficient information processing, enabling faster decision-making and streamlined workflows."
   },
   {
     title: "Netflix Data Analysis",
     desc: "Analyzed Netflix Movies & TV Shows dataset using Python",
-    github: "https://github.com/joy-127/netflix-data-analysis",
+    github: "https://github.com/joy-127/Netflix-Data-Analytics-Dashboard.git",
     tech: ["Python", "Pandas", "Power BI"],
-    details: "Performed comprehensive data cleaning, exploratory data analysis (EDA), and advanced data visualization to uncover key trends and patterns. Developed an interactive Power BI dashboard to present insights effectively, enabling data-driven decision-making and actionable business recommendations."
+    details:
+      "Performed comprehensive data cleaning, exploratory data analysis (EDA), and advanced data visualization to uncover key trends and patterns. Developed an interactive Power BI dashboard to present insights effectively, enabling data-driven decision-making and actionable business recommendations."
   }
 ]
 
@@ -42,7 +46,7 @@ const Projects = () => {
     projects.forEach(async (project) => {
       try {
         const repo = project.github.includes("github.com")
-          ? project.github.split("github.com/")[1]
+          ? project.github.split("github.com/")[1].replace(".git", "")
           : null
 
         if (!repo) return
@@ -50,7 +54,7 @@ const Projects = () => {
         const res = await fetch(`https://api.github.com/repos/${repo}`)
         const data = await res.json()
 
-        setStats(prev => ({
+        setStats((prev) => ({
           ...prev,
           [project.title]: data.stargazers_count
         }))
@@ -61,9 +65,10 @@ const Projects = () => {
   }, [])
 
   return (
-    <section className="py-24 bg-gray-950 text-white px-6 relative">
-
-      {/* Centered White Heading */}
+    <section
+      id="projects"
+      className="py-24 bg-gray-950 text-white px-6 relative scroll-mt-24"
+    >
       <div className="max-w-6xl mx-auto mb-16 text-center">
         <h2 className="text-4xl md:text-5xl font-bold text-white">
           Projects
@@ -77,9 +82,7 @@ const Projects = () => {
         />
       </div>
 
-      {/* Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-
         {projects.map((p, i) => (
           <motion.div
             key={i}
@@ -97,9 +100,7 @@ const Projects = () => {
                   {p.title}
                 </h3>
 
-                <p className="text-gray-400 text-sm mb-4">
-                  {p.desc}
-                </p>
+                <p className="text-gray-400 text-sm mb-4">{p.desc}</p>
 
                 <div className="flex flex-wrap gap-2 mb-4">
                   {p.tech.map((t, idx) => (
@@ -112,17 +113,13 @@ const Projects = () => {
                   ))}
                 </div>
 
-                <p className="text-sm text-yellow-400">
-                 
-                </p>
+                
               </div>
             </Tilt>
           </motion.div>
         ))}
-
       </div>
 
-      {/* Modal */}
       <AnimatePresence>
         {selected && (
           <motion.div
@@ -164,7 +161,6 @@ const Projects = () => {
           </motion.div>
         )}
       </AnimatePresence>
-
     </section>
   )
 }
