@@ -7,7 +7,7 @@ const projects = [
   {
     title: "Portfolio Website",
     desc: "Modern developer portfolio built with React & Tailwind",
-    github: "https://github.com/joy-127/portfolio-site",
+    github: "https://github.com/joy-127/Portfolio.git",
     tech: ["React", "Tailwind", "Framer Motion"],
     details:
       "A fully responsive, visually engaging developer portfolio designed with modern UI principles, incorporating smooth animations, interactive 3D effects, and dynamic components. Showcases my projects, technical skills, and professional experience in a polished and immersive way, highlighting creativity, attention to detail, and front-end development expertise."

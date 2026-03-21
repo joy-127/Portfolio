@@ -93,7 +93,7 @@ const Hero = () => {
             <div className="relative w-[320px] md:w-[400px] aspect-[3/4] rounded-[2rem] overflow-hidden border border-white/10 bg-gradient-to-b from-white/10 to-transparent backdrop-blur-2xl shadow-2xl group-hover:scale-[1.03] transition-transform duration-500">
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent z-10" />
               <img
-                src="/profile.png"
+                src="/profile.jpg"
                 alt="PremKumar"
                 className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
               />
